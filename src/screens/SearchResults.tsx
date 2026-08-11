@@ -2,6 +2,7 @@ import styled from 'styled-components/native';
 import React from 'react';
 import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import mockData from '../services/mockData';
+import Header from '../components/Header';
 
 const Container = styled.View`
   flex: 1;
@@ -18,17 +19,20 @@ const Item = styled.TouchableOpacity`
 
 export default function SearchResults({ navigation }: any) {
   return (
-    <Container>
-      <FlatList
-        data={mockData.trips}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <Item onPress={() => navigation.navigate('TripDetails', { id: item.id })}>
-            <Text style={{fontWeight: '600'}}>{item.title}</Text>
-            <Text>{item.subtitle}</Text>
-          </Item>
-        )}
-      />
-    </Container>
+    <>
+      <Header navigation={navigation} title="Search" />
+      <Container>
+        <FlatList
+          data={mockData.trips}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <Item onPress={() => navigation.navigate('TripDetails', { id: item.id })}>
+              <Text style={{fontWeight: '600'}}>{item.title}</Text>
+              <Text>{item.subtitle}</Text>
+            </Item>
+          )}
+        />
+      </Container>
+    </>
   );
 }

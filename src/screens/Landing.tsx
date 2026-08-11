@@ -1,24 +1,22 @@
 import styled from 'styled-components/native';
 import React from 'react';
 import { View, Text } from 'react-native';
+import Header from '../components/Header';
 
 const Container = styled.View`
   flex: 1;
-  align-items: center;
-  justify-content: center;
-  background-color: ${props => props.theme.colors.background};
-`;
-
-const Title = styled.Text`
-  font-size: 20px;
-  color: ${props => props.theme.colors.primary};
+  padding: 16px;
+  background-color: ${p => p.theme.colors.background};
 `;
 
 export default function LandingScreen({ navigation }: any) {
   return (
-    <Container>
-      <Title>Landing Page</Title>
-      <Text onPress={() => navigation.navigate('Search')} style={{color: '#2563eb', marginTop: 12}}>Go to Search</Text>
-    </Container>
+    <>
+      <Header navigation={navigation} title="Home" />
+      <Container>
+        <Text style={{fontSize: 20, fontWeight: '700'}}>Landing Page</Text>
+        <Text style={{marginTop: 12, color: '#2563eb'}} onPress={() => navigation.navigate('Search')}>Go to Search</Text>
+      </Container>
+    </>
   );
 }
