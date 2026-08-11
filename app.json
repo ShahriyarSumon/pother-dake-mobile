@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "name": "Pother Dake RDM",
+    "slug": "pother-dake-rdm-mobile",
+    "version": "1.0.0",
+    "sdkVersion": "49.0.0",
+    "platforms": ["ios","android","web"],
+    "extra": {
+      "apiUrl": "${EXPO_PUBLIC_API_URL}"
+    }
+  }
+}
