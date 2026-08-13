@@ -1,4 +1,4 @@
-import client, { setAuthToken, getAuthToken } from './client';
+import client, { setAuthToken, getAuthToken, setAuthUser, getAuthUser, clearAuthUser } from './client';
 import mockData from '../services/mockData';
 
 // Feature flag: if USE_MOCK=true (env or app.json) we'll fallback to mock data on errors.
@@ -15,13 +15,16 @@ export async function login(email: string, password: string) {
     const data = unwrap(res);
     // try common token fields
     const token = data?.token || data?.accessToken || data?.data?.token;
+    const user = data?.user || data?.data || data?.result || null;
     if (token) await setAuthToken(token);
+    if (user) await setAuthUser(user);
     return data;
   } catch (err) {
     if (USE_MOCK) {
       // return mock login response
-      const mock = { token: 'mock-token-123', user: { id: 'u1', name: 'Mock User', role: 'passenger', email } };
+      const mock = { token: 'mock-token-123', user: { id: 'u1', name: 'Mock User', role: 'PASSENGER', email } };
       await setAuthToken(mock.token);
+      await setAuthUser(mock.user);
       return mock;
     }
     throw err;
@@ -30,6 +33,13 @@ export async function login(email: string, password: string) {
 
 export async function logout() {
   await setAuthToken(null);
+  await setAuthUser(null);
+}
+
+export async function getStoredAuth() {
+  const token = await getAuthToken();
+  const user = await getAuthUser();
+  return { token, user };
 }
 
 export async function fetchTrips() {
@@ -150,6 +160,7 @@ export async function completeRegistration(formData: any) {
 export default {
   login,
   logout,
+  getStoredAuth,
   fetchTrips,
   fetchTripById,
   createTrip,
