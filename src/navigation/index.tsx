@@ -7,6 +7,8 @@ import AuthScreen from '../screens/Auth';
 import PassengerDashboard from '../screens/PassengerDashboard';
 import DriverDashboard from '../screens/DriverDashboard';
 import AdminDashboard from '../screens/AdminDashboard';
+import CreateTrip from '../screens/CreateTrip';
+import CompleteRegistration from '../screens/CompleteRegistration';
 
 export type RootStackParamList = {
   Landing: undefined;
@@ -16,6 +18,8 @@ export type RootStackParamList = {
   Passenger: undefined;
   Driver: undefined;
   Admin: undefined;
+  CreateTrip: undefined;
+  CompleteRegistration: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -30,6 +34,8 @@ export default function RootNavigator() {
       <Stack.Screen name="Passenger" component={PassengerDashboard} />
       <Stack.Screen name="Driver" component={DriverDashboard} />
       <Stack.Screen name="Admin" component={AdminDashboard} />
+      <Stack.Screen name="CreateTrip" component={CreateTrip} />
+      <Stack.Screen name="CompleteRegistration" component={CompleteRegistration} />
     </Stack.Navigator>
   );
 }

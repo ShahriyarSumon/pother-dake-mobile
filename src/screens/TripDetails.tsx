@@ -1,8 +1,7 @@
 import styled from 'styled-components/native';
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator, Alert, TextInput } from 'react-native';
 import Header from '../components/Header';
-import Card from '../components/ui/Card';
 import api from '../api';
 
 const Container = styled.View`
@@ -20,10 +19,41 @@ const SectionTitle = styled.Text`
   margin-bottom: 8px;
 `;
 
+const Card = styled.View`
+  background-color: #fff;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+`;
+
+const Button = styled.TouchableOpacity`
+  background-color: #2563eb;
+  padding: 12px;
+  border-radius: 8px;
+  align-items: center;
+  margin-top: 8px;
+`;
+
+const ButtonText = styled.Text`
+  color: #fff;
+  font-weight: 700;
+`;
+
+const SeatsInput = styled.TextInput`
+  border-width: 1px;
+  border-color: #e5e7eb;
+  padding: 8px;
+  border-radius: 8px;
+  background-color: #fff;
+  width: 80px;
+`;
+
 export default function TripDetails({ route, navigation }: any) {
   const id = route?.params?.id;
   const [trip, setTrip] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [seats, setSeats] = useState('1');
+  const [booking, setBooking] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -34,6 +64,21 @@ export default function TripDetails({ route, navigation }: any) {
     }
     return () => { mounted = false; };
   }, [id]);
+
+  const onBook = async () => {
+    const seatsNum = parseInt(seats, 10) || 1;
+    setBooking(true);
+    try {
+      await api.bookTrip({ tripId: trip?.id, seatsBooked: seatsNum });
+      setBooking(false);
+      Alert.alert('Success', 'Trip booked (mock)');
+      navigation.navigate('Passenger');
+    } catch (err: any) {
+      setBooking(false);
+      const msg = err?.response?.data?.message || err?.message || 'Booking failed';
+      Alert.alert('Error', String(msg));
+    }
+  };
 
   return (
     <>
@@ -51,15 +96,28 @@ export default function TripDetails({ route, navigation }: any) {
               <Text style={{marginTop: 8, color: '#6b7280'}}>Time: {trip?.time}</Text>
             </Card>
 
+            <SectionTitle>Book seats</SectionTitle>
+            <Card style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Text style={{marginRight: 8}}>Seats:</Text>
+                <SeatsInput value={seats} onChangeText={setSeats} keyboardType="numeric" />
+              </View>
+              {booking ? <ActivityIndicator /> : (
+                <Button onPress={onBook}>
+                  <ButtonText>Book</ButtonText>
+                </Button>
+              )}
+            </Card>
+
             <SectionTitle style={{marginTop: 16}}>Map</SectionTitle>
             <Card>
               <Text style={{color: '#6b7280'}}>Map placeholder — replace with react-native-maps or MapView</Text>
             </Card>
 
             <SectionTitle style={{marginTop: 16}}>Actions</SectionTitle>
-            <TouchableOpacity onPress={() => alert('Contact driver (mock)')} style={{backgroundColor: '#2563eb', padding: 12, borderRadius: 8}}>
-              <Text style={{color: '#fff', fontWeight: '700'}}>Contact Driver</Text>
-            </TouchableOpacity>
+            <Button onPress={() => alert('Contact driver (mock)')}>
+              <ButtonText>Contact Driver</ButtonText>
+            </Button>
           </Content>
         )}
       </Container>

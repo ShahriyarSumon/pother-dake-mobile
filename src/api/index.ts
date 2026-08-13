@@ -33,11 +33,22 @@ export async function logout() {
 }
 
 export async function fetchTrips() {
+  // Try GET /tripRoute first; if not available try /tripRoute/my-trips; fallback to mock on error
   try {
-    // assumption: server exposes GET /tripRoute to list trips
     const res = await client.get('/tripRoute');
     return unwrap(res);
-  } catch (err) {
+  } catch (err: any) {
+    // If server returns 404/405 or endpoint missing, try my-trips
+    const status = err?.response?.status;
+    if (status === 404 || status === 405 || status === 501) {
+      try {
+        const res2 = await client.get('/tripRoute/my-trips');
+        return unwrap(res2);
+      } catch (err2) {
+        if (USE_MOCK) return mockData.trips;
+        throw err2;
+      }
+    }
     if (USE_MOCK) return mockData.trips;
     throw err;
   }
@@ -83,8 +94,9 @@ export async function getMyTrips() {
   }
 }
 
-export async function bookTrip(payload: { tripId: string; passengerId: string; seatsBooked: number }) {
+export async function bookTrip(payload: { tripId: string; passengerId?: string; seatsBooked: number }) {
   try {
+    // If passengerId is omitted, backend should use token to determine passenger
     const res = await client.post('/tripBookedRoute/tripBooked', payload);
     return unwrap(res);
   } catch (err) {
@@ -123,6 +135,18 @@ export async function getAllPassengers() {
   }
 }
 
+export async function completeRegistration(formData: any) {
+  try {
+    const res = await client.post('/user/complete-registration', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
+    return unwrap(res);
+  } catch (err) {
+    if (USE_MOCK) return { ok: true };
+    throw err;
+  }
+}
+
 export default {
   login,
   logout,
@@ -134,5 +158,6 @@ export default {
   bookTrip,
   getAllBookings,
   getAllDrivers,
-  getAllPassengers
+  getAllPassengers,
+  completeRegistration
 };
