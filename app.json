@@ -6,7 +6,8 @@
     "sdkVersion": "49.0.0",
     "platforms": ["ios","android","web"],
     "extra": {
-      "apiUrl": "${EXPO_PUBLIC_API_URL}"
+      "apiUrl": "http://72.61.225.177:5001",
+      "useMock": false
     }
   }
 }
