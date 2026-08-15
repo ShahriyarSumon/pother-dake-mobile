@@ -11,7 +11,8 @@
     ],
     "extra": {
       "apiUrl": "http://72.61.225.177:5001",
-      "useMock": false
+      "useMock": true,
+      "mockMode": true
     },
     "android": {
       "package": "com.potherdake"
