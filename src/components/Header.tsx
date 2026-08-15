@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components/native';
 import { Text, TouchableOpacity } from 'react-native';
 import Sidebar from './Sidebar';
+import { useAuth } from '../auth/AuthContext';
 
 const HeaderContainer = styled.View`
   height: 56px;
@@ -26,6 +27,7 @@ const MenuButton = styled.TouchableOpacity`
 
 export default function Header({ navigation, title }: any) {
   const [open, setOpen] = useState(false);
+  const { user } = useAuth();
 
   return (
     <>
@@ -34,8 +36,8 @@ export default function Header({ navigation, title }: any) {
           <Text style={{color: '#2563eb', fontWeight: '600'}}>Menu</Text>
         </MenuButton>
         <Title>{title || 'Pother Dake'}</Title>
-        <MenuButton onPress={() => navigation.navigate('Auth')}>
-          <Text style={{color: '#2563eb', fontWeight: '600'}}>Sign In</Text>
+        <MenuButton onPress={() => navigation.navigate('Profile')}>
+          <Text style={{color: '#2563eb', fontWeight: '600'}}>{user?.name?.split(' ')[0] || 'Account'}</Text>
         </MenuButton>
       </HeaderContainer>
       <Sidebar visible={open} onClose={() => setOpen(false)} navigation={navigation} />
