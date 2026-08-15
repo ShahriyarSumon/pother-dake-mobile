@@ -4,10 +4,17 @@
     "slug": "pother-dake-rdm-mobile",
     "version": "1.0.0",
     "sdkVersion": "49.0.0",
-    "platforms": ["ios","android","web"],
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "extra": {
       "apiUrl": "http://72.61.225.177:5001",
       "useMock": false
+    },
+    "android": {
+      "package": "com.potherdake"
     }
   }
 }
